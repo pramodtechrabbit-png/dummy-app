@@ -1,33 +1,20 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_HUB_CRED = 'dockerhub-creds' // Jenkins credentials ID
-        IMAGE_NAME = 'pramod001/dummy-qa-app-new'
-        TAG = 'latest'
-    }
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/pramodtechrabbit-png/dummy-app-new.git'
+                git 'https://github.com/pramodtechrabbit-png/dummy-app.git'
             }
         }
         stage('Docker Build') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                sh 'docker build -t dummy-qa-app:latest .'
             }
         }
-        stage('Docker Push') {
+        stage('Docker Run') {
             steps {
-                withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CRED, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh "echo $PASS | docker login -u $USER --password-stdin"
-                    sh "docker push ${IMAGE_NAME}:${TAG}"
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh "docker rm -f dummy-qa-new || true"
-                sh "docker run -d -p 8082:80 --name dummy-qa-new ${IMAGE_NAME}:${TAG}"
+                sh 'docker rm -f dummy-qa-app || true'
+                sh 'docker run -d -p 8081:80 --name dummy-qa-app dummy-qa-app:latest'
             }
         }
     }
