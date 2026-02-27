@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "pramodtechrabbit-png/ci-app"
-        DOCKER_TAG = "${env.GIT_COMMIT}"
-        APP_PORT = "8090"
+        DOCKERHUB_CREDS = credentials('dockerhub-creds') // This is your Jenkins ID
     }
 
     stages {
@@ -17,49 +15,38 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE}:latest -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    dockerImage = docker.build("pramod001/dummy-app:${env.BUILD_NUMBER}")
                 }
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Push Docker Hub') {
             steps {
                 script {
-                    sh """
-                    if [ \$(docker ps -q -f name=ci-app) ]; then
-                        docker stop ci-app
-                        docker rm ci-app
-                    fi
-                    """
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                        dockerImage.push()
+                    }
                 }
             }
         }
 
-        stage('Run New Container') {
+        stage('Deploy Container') {
             steps {
-                script {
-                    sh "docker run -d --name ci-app -p ${APP_PORT}:80 ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
-                    sh "docker push ${DOCKER_IMAGE}:latest"
-                    sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                }
+                sh """
+                docker stop dummy-app || true
+                docker rm dummy-app || true
+                docker run -d -p 8080:80 --name dummy-app pramod001/dummy-app:${env.BUILD_NUMBER}
+                """
             }
         }
     }
 
     post {
         success {
-            echo "✅ Deployment successful! Access your app at http://localhost:${APP_PORT}"
+            echo "Pipeline completed successfully!"
         }
         failure {
-            echo "❌ Deployment failed. Check logs for details."
+            echo "Pipeline failed. Check logs."
         }
     }
 }
