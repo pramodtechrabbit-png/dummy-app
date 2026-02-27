@@ -1,52 +1,34 @@
 pipeline {
     agent any
-
     environment {
-        DOCKERHUB_CREDS = credentials('dockerhub-creds') // This is your Jenkins ID
+        DOCKER_HUB_CRED = 'dockerhub-creds' // Jenkins credentials ID
+        IMAGE_NAME = 'pramod001/dummy-qa-app-new'
+        TAG = 'latest'
     }
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/pramodtechrabbit-png/dummy-app.git'
+                git 'https://github.com/pramodtechrabbit-png/dummy-app-new.git'
             }
         }
-
-        stage('Build Docker Image') {
+        stage('Docker Build') {
             steps {
-                script {
-                    dockerImage = docker.build("pramod001/dummy-app:${env.BUILD_NUMBER}")
+                sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CRED, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh "echo $PASS | docker login -u $USER --password-stdin"
+                    sh "docker push ${IMAGE_NAME}:${TAG}"
                 }
             }
         }
-
-        stage('Push Docker Hub') {
+        stage('Deploy') {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
-                        dockerImage.push()
-                    }
-                }
+                sh "docker rm -f dummy-qa-new || true"
+                sh "docker run -d -p 8082:80 --name dummy-qa-new ${IMAGE_NAME}:${TAG}"
             }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                sh """
-                docker stop dummy-app || true
-                docker rm dummy-app || true
-                docker run -d -p 8080:80 --name dummy-app pramod001/dummy-app:${env.BUILD_NUMBER}
-                """
-            }
-        }
-    }
-
-    post {
-        success {
-            echo "Pipeline completed successfully!"
-        }
-        failure {
-            echo "Pipeline failed. Check logs."
         }
     }
 }
