@@ -1,14 +1,8 @@
-# Use lightweight nginx image
+# Use official Nginx image
 FROM nginx:alpine
 
-# Remove default nginx page
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy our index.html
+# Copy index.html into nginx html folder
 COPY index.html /usr/share/nginx/html/index.html
 
 # Expose port 80
 EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
