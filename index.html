@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QA ok Dummy Build</title>
+    <title>QA Dummy Build</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .card {
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to QA Dummy Buildd!</h1>
-    <p>Last build verified at: 2026-02-27 14:30</p>
+
+    <div class="card">
+        <h1>QA Dummy Build ✅</h1>
+        <p class="status">Build Status: SUCCESS</p>
+        <p><strong>Version:</strong> 1.0.1</p>
+        <p><strong>Last Build Time:</strong> 2026-02-27 14:30</p>
+        <p>Deployed via Jenkins CI/CD Pipeline</p>
+    </div>
+
 </body>
 </html>
