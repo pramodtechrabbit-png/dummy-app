@@ -1,26 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CI/CD Auto Build Test</title>
+    <title>CI/CD Auto Trigger App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f4f6f9;
             text-align: center;
             margin-top: 100px;
         }
-        h1 {
-            color: green;
+        .box {
+            background: white;
+            padding: 30px;
+            width: 400px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .version {
+        h1 {
+            color: #2c3e50;
+        }
+        .build {
+            color: green;
             font-size: 20px;
-            color: blue;
+            font-weight: bold;
+        }
+        .time {
+            color: #555;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>🚀 Jenkins + Docker CI/CD Working!</h1>
-    <p>This page confirms automatic build and deployment.</p>
-    <p class="version">Version: 3.0</p>
+
+<div class="box">
+    <h1>🚀 CI/CD Pipeline Working</h1>
+    <p class="build">New Docker Image Built Successfully!</p>
+    <p>Triggered by GitHub Push</p>
+    <p class="time">Build Version: v3.0</p>
+</div>
+
 </body>
 </html>
