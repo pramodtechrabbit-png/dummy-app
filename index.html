@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CI/CD Auto Trigger App</title>
+    <title>CI/CD Dummy App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+            background-color: #eef2f5;
             text-align: center;
-            margin-top: 100px;
+            padding-top: 100px;
         }
-        .box {
-            background: white;
-            padding: 30px;
-            width: 400px;
+        .container {
+            background: #ffffff;
+            padding: 40px;
+            width: 500px;
             margin: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         h1 {
             color: #2c3e50;
         }
-        .build {
-            color: green;
+        .status {
             font-size: 20px;
             font-weight: bold;
+            color: green;
+            margin-top: 15px;
         }
-        .time {
+        .timestamp {
             color: #555;
             margin-top: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-
-<div class="box">
-    <h1>🚀 CI/CD Pipeline Working</h1>
-    <p class="build">New Docker Image Built Successfully!</p>
-    <p>Triggered by GitHub Push</p>
-    <p class="time">Build Version: v3.0</p>
-</div>
-
+    <div class="container">
+        <h1>🚀 CI/CD Dummy App</h1>
+        <p class="status">New Docker Image Built Successfully!</p>
+        <p>Triggered by GitHub Push</p>
+        <p class="timestamp">Last Build Verified at: 2026-03-02 10:45</p>
+    </div>
 </body>
 </html>
